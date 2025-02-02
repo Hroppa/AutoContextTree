@@ -3,31 +3,57 @@ import * as cp from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 
-let debounceTimer: NodeJS.Timeout | undefined;
+let lastKnownCommit: string | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Auto Tree Generator is now active');
 
-    // Register the save event handler
-    const disposable = vscode.workspace.onDidSaveTextDocument((document) => {
+    // Set up a periodic check for new commits
+    const disposable = setInterval(async () => {
         const config = vscode.workspace.getConfiguration('autoTreeGenerator');
         if (!config.get<boolean>('enabled', true)) {
             return;
         }
 
-        // Debounce the tree generation
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
+        try {
+            await checkForNewCommit();
+        } catch (err) {
+            console.error('Failed to check for new commit:', err);
+        }
+    }, 5000); // Check every 5 seconds
+
+    // Clean up interval on deactivation
+    context.subscriptions.push({
+        dispose: () => clearInterval(disposable)
+    });
+}
+
+async function checkForNewCommit(): Promise<void> {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders) {
+        return;
+    }
+
+    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+
+    try {
+        const currentCommit = await executeCommand('git rev-parse HEAD', workspaceRoot);
+        
+        // If this is our first check, store the commit hash and return
+        if (lastKnownCommit === null) {
+            lastKnownCommit = currentCommit.trim();
+            return;
         }
 
-        debounceTimer = setTimeout(() => {
-            generateTree().catch(err => {
-                vscode.window.showErrorMessage(`Failed to generate tree: ${err.message}`);
-            });
-        }, 1000); // Wait 1 second after the last save
-    });
-
-    context.subscriptions.push(disposable);
+        // If the commit has changed, update the tree
+        if (currentCommit.trim() !== lastKnownCommit) {
+            lastKnownCommit = currentCommit.trim();
+            await generateTree();
+        }
+    } catch (error) {
+        // Handle error silently - workspace might not be a git repo
+        console.log('Error checking commit:', error);
+    }
 }
 
 async function generateTree(): Promise<void> {
@@ -88,7 +114,5 @@ function executeCommand(command: string, cwd: string): Promise<string> {
 }
 
 export function deactivate() {
-    if (debounceTimer) {
-        clearTimeout(debounceTimer);
-    }
+    // No need for debounceTimer cleanup anymore
 } 

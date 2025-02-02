@@ -1,2 +1,11 @@
 .gitattributes
+.gitignore
+.vscodeignore
+Context/tree.txt
 LICENSE
+PRD.md
+README.md
+package-lock.json
+package.json
+src/extension.ts
+tsconfig.json

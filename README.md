@@ -4,7 +4,7 @@ A VS Code extension that automatically generates a list of Git-tracked files in 
 
 ## Features
 
-- Automatically generates a tree of Git-tracked files on every file save
+- Automatically generates a tree of Git-tracked files after each commit
 - Filters out specified directories and files (configurable)
 - Cross-platform support (Windows and Unix-like systems)
 - Debounced execution to prevent performance issues during rapid saves
@@ -43,7 +43,7 @@ This extension contributes the following settings:
 
 1. Open a Git repository in VS Code
 2. The extension will automatically activate
-3. Every time you save a file, it will generate/update the tree file
+3. Every time you make a commit, it will generate/update the tree file
 4. The tree file will be created at the configured location (default: `Context/tree.txt`)
 
 On Windows, the `findstr` command is used for filtering. On Unix-like systems, `grep` is used instead.
