@@ -5,7 +5,6 @@ Context/tree.txt
 LICENSE
 PRD.md
 README.md
-Test/test
 package-lock.json
 package.json
 src/extension.ts
