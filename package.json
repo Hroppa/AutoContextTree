@@ -1,0 +1,57 @@
+{
+  "name": "vscode-auto-tree-generator",
+  "displayName": "Auto Tree Generator",
+  "description": "Automatically generates a tree of Git-tracked files on save",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Auto Tree Generator",
+      "properties": {
+        "autoTreeGenerator.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable automatic tree generation on file save"
+        },
+        "autoTreeGenerator.outputFile": {
+          "type": "string",
+          "default": "Context/tree.txt",
+          "description": "Output file path for the generated tree"
+        },
+        "autoTreeGenerator.filterPatterns": {
+          "type": "string",
+          "default": "(vendor|public|seeds|migrate)",
+          "description": "Patterns to filter out from the file list"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x.x",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.x.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hroppa/auto-context-tree-generator.git"
+  },
+  "publisher": "Hroppa",
+  "license": "MIT"
+}
