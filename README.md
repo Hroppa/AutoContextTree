@@ -1,14 +1,16 @@
 # VS Code Auto Context Tree Generator
 
-A VS Code extension that automatically generates a list of Git-tracked files in your workspace, excluding specified patterns. The list is updated every time you save a file.
+A VS Code extension that automatically generates a list of Git-tracked files in your workspace, excluding specified patterns. The list is updated every time you make a commit.
+
+This README was generated with Claude.
 
 ## Features
 
 - Automatically generates a tree of Git-tracked files after each commit
 - Filters out specified directories and files (configurable)
 - Cross-platform support (Windows and Unix-like systems)
-- Debounced execution to prevent performance issues during rapid saves
 - Configurable output file location
+
 
 ## Requirements
 
